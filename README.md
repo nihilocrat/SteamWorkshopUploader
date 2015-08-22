@@ -13,8 +13,8 @@ Edit "config.json" to match your workshop settings. For example, if you use pred
 
 Be sure to include these files in builds you distribute:
 
-config.json
-steam_appid.txt
-steam_api.dll (Steamworks.NET should do this automatically)
-WorkshopContent/
-Optionally: an example mod or two in WorkshopContent/ so modders can understand the format of .workshop.json files.
+- config.json
+- steam_appid.txt
+- steam_api.dll (Steamworks.NET should do this automatically)
+- WorkshopContent/
+- Optionally: an example mod or two in WorkshopContent/ so modders can understand the format of .workshop.json files.
