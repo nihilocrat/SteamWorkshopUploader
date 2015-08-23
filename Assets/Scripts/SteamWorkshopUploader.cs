@@ -9,13 +9,17 @@ using TinyJSON;
 
 public class SteamWorkshopUploader : MonoBehaviour
 {
+    public const int version = 4;
+
+    public Text versionText;
     public Text statusText;
     public Slider progressBar;
 
     public RectTransform packListRoot;
     public GameObject packListButtonPrefab;
-    
+
     [Header("ModPack Interface")]
+    public RectTransform currentItemPanel;
     public Text submitButtonText;
     public Text modPackContents;
     public RawImage modPackPreview;
@@ -35,7 +39,10 @@ public class SteamWorkshopUploader : MonoBehaviour
 
     void Start()
     {
+        versionText.text = string.Format("Steam Workshop Uploader - Build {0} --- App ID: {1}", version, SteamManager.m_steamAppId);
+
         RefreshPackList();
+        RefreshCurrentModPack();
     }
 
     void OnApplicationQuit()
@@ -118,6 +125,14 @@ public class SteamWorkshopUploader : MonoBehaviour
 
     public void RefreshCurrentModPack()
     {
+        if(currentPack == null)
+        {
+            currentItemPanel.gameObject.SetActive(false);
+            return;
+        }
+
+        currentItemPanel.gameObject.SetActive(true);
+
         var filename = currentPack.filename;
 
         submitButtonText.text = "Submit " + Path.GetFileNameWithoutExtension(filename);

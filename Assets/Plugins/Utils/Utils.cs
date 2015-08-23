@@ -629,84 +629,6 @@ def decToRoman(num,s,decs,romans):
 	    return i + 1;
 	}
 	
-	// HACK : this is a terrible hack this should only live in GameSettings
-	public static int maxPlayers = 4;
-	
-	public static bool GetAnyButtonDown()
-	{
-		for(int i=0; i <= maxPlayers; i++)
-		{
-			if(Input.GetButtonDown("Attack_"+i) ||
-			   Input.GetButtonDown("Dodge_"+i) || 
-		       Input.GetButtonDown("Block_"+i))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	public static bool GetSelectButtonDown()
-	{
-		for(int i=0; i <= maxPlayers; i++)
-		{
-			if(Input.GetButtonDown("Dodge_"+i))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	public static bool GetCancelButtonDown()
-	{
-		for(int i=0; i <= maxPlayers; i++)
-		{
-			if(Input.GetButtonDown("Block_"+i))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	
-	public static int GetDepthCost(int depth)
-	{
-		if(depth <= 1)
-		{
-			return 0;
-		}
-		
-		// base cost of 20 for depth 2... after that, it's x2 for each depth
-		int lowerDepthCost = GetDepthCost(depth - 1);
-		if(lowerDepthCost <= 0)
-		{
-			lowerDepthCost = 10;
-		}
-		return lowerDepthCost * 2;
-	}
-	
-	public static string GetDefaultWeaponNameAtDepth(int depth)
-	{
-		// HACK: just hardcoded for now
-		if(depth >= 3 && depth <= 4)
-		{
-			return "weapon_zweihander";
-		}
-		else if(depth >= 5)
-		{
-			return "weapon_anduril";
-		}
-		else
-		{
-			return "weapon_longsword";
-		}
-	}
-	
 	public static string GetMd5Hash(string input)
     {
 		MD5 md5Hash = MD5.Create();
@@ -764,8 +686,16 @@ def decToRoman(num,s,decs,romans):
 		
 #if UNITY_WEBPLAYER
 #else
-		byte[] byteArray = File.ReadAllBytes(savedImageName);
-		tex.LoadImage(byteArray);
+        try
+        {
+            byte[] byteArray = File.ReadAllBytes(savedImageName);
+            tex.LoadImage(byteArray);
+        }
+        catch
+        {
+            Debug.LogWarning("Tried to load preview file which doesn't exist (yet?): " + savedImageName);
+            return null;
+        }
 #endif
 		return tex;
 	}
