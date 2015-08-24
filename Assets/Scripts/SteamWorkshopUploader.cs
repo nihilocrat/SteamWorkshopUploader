@@ -317,10 +317,14 @@ This has the benefit of directing the author to the workshop page so that they c
                 statusText.text = "Item invalid ... dunno why! :(";
                 break;
             case EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile:
+                statusText.text = "Uploading preview image...";
+                break;
             case EItemUpdateStatus.k_EItemUpdateStatusUploadingContent:
-                statusText.text = "Uploading...";
+                statusText.text = "Uploading content...";
                 break;
             case EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig:
+                statusText.text = "Preparing configuration...";
+                break;
             case EItemUpdateStatus.k_EItemUpdateStatusPreparingContent:
                 statusText.text = "Preparing content...";
                 break;
