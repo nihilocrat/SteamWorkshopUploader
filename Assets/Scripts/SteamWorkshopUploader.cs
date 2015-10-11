@@ -37,9 +37,11 @@ public class SteamWorkshopUploader : MonoBehaviour
     protected CallResult<CreateItemResult_t> m_itemCreated;
     protected CallResult<SubmitItemUpdateResult_t> m_itemSubmitted;
 
-    void Start()
+    void Awake()
     {
         versionText.text = string.Format("Steam Workshop Uploader - Build {0} --- App ID: {1}", version, SteamManager.m_steamAppId);
+
+        SetupDirectories();
 
         RefreshPackList();
         RefreshCurrentModPack();
@@ -78,7 +80,17 @@ public class SteamWorkshopUploader : MonoBehaviour
             m_itemSubmitted = CallResult<SubmitItemUpdateResult_t>.Create(OnItemSubmitted);
         }
 	}
-	
+
+    void SetupDirectories()
+    {
+        basePath = Application.dataPath + relativeBasePath;
+
+        if (!Directory.Exists(basePath))
+        {
+            Directory.CreateDirectory(basePath);
+        }
+    }
+
     public string[] GetPackFilenames()
     {
         return Directory.GetFiles(basePath, "*.workshop.json", SearchOption.TopDirectoryOnly);
