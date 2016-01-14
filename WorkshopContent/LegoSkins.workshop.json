@@ -1,11 +1,12 @@
 {
-	"publishedfileid" : "494840610",
-	"contentfolder" : "LegoSkins",
-	"previewfile" : "LegoSkins.png",
-	"visibility" : 0,
-	"title" : "Unofficial LEGO Space Skin Pack",
-	"description" : "Skins for all your favorite LEGO Space sets from the 80s and 90s",
-    "tags" : [
-        "Skin"
-    ]
+	"publishedfileid": "494840610",
+	"contentfolder": "LegoSkins",
+	"previewfile": "LegoSkins.png",
+	"visibility": 0,
+	"title": "Unofficial LEGO Space Skin Pack",
+	"description": "Skins for all your favorite LEGO Space sets from the 80s and 90s.",
+	"metadata": "",
+	"tags": [
+		"Skin"
+	]
 }
