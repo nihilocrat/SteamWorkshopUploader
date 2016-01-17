@@ -9,7 +9,7 @@ using TinyJSON;
 
 public class SteamWorkshopUploader : MonoBehaviour
 {
-    public const int version = 5;
+    public const int version = 6;
 
     public Text versionText;
     public Text statusText;
@@ -26,6 +26,7 @@ public class SteamWorkshopUploader : MonoBehaviour
     public InputField modPackName;
     public InputField modPackTitle;
     public InputField modPackPreviewFilename;
+    public InputField modPackContentFolder;
     public InputField modPackChangeNotes;
     public InputField modPackDescription;
     public InputField modPackTags;
@@ -173,6 +174,7 @@ public class SteamWorkshopUploader : MonoBehaviour
 
         modPackTitle.text = currentPack.title;
         modPackPreviewFilename.text = currentPack.previewfile;
+        modPackContentFolder.text = currentPack.contentfolder;
         modPackDescription.text = currentPack.description;
         modPackTags.text = string.Join(",", currentPack.tags.ToArray());
         modPackVisibility.value = currentPack.visibility;
@@ -260,6 +262,7 @@ public class SteamWorkshopUploader : MonoBehaviour
             var pack = new WorkshopModPack();
             pack.Save(filename);
 
+            pack.contentfolder = modPackName.text;
             Directory.CreateDirectory(basePath + modPackName.text);
             
             RefreshPackList();
