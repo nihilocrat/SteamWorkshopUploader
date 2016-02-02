@@ -1,5 +1,5 @@
 # SteamWorkshopUploader
-A generic, bare-bones app made in Unity3D for letting players upload mods to Steam Workshop for your game.
+A generic, bare-bones app made in Unity3D for letting players upload mods to Steam Workshop for your game. Unfortunately, this is not something Valve provides a tool for; you can modify existing Workshop items but you can't actually create them or upload content for them without using the Steam API. The uploader saves you from that hassle.
 
 Right now everything included will work as-is for the Steam API demo game "SpaceWar" (app id 480), but due to the way the Steam API works, it should work just fine on any other game simply by changing the app id. I've even tested it myself with Skyrim.
 
