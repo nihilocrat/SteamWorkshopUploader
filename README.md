@@ -1,7 +1,7 @@
 # SteamWorkshopUploader
 A generic, bare-bones app made in Unity3D for letting players upload mods to Steam Workshop for your game.
 
-Right now everything included will work as-is for the game "Sky Rogue" (app id 381020), but due to the way the Steam API works, it should work just fine on any other game simply by changing the app id. I've even tested it myself with Skyrim.
+Right now everything included will work as-is for the Steam API demo game "SpaceWar" (app id 480), but due to the way the Steam API works, it should work just fine on any other game simply by changing the app id. I've even tested it myself with Skyrim.
 
 Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would work without [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET).
 
