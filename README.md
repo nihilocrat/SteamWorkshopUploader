@@ -7,8 +7,10 @@ Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would w
 
 ### Downloads
 
-Build 6
-[Windows](https://dl.dropboxusercontent.com/u/253784/SteamWorkshopUploader.zip
+####Build 6
+
+[Windows](https://dl.dropboxusercontent.com/u/253784/SteamWorkshopUploader.zip)
+
 [Mac](https://dl.dropboxusercontent.com/u/253784/SteamWorkshopUploader_mac.zip)
 
 ### Setup
