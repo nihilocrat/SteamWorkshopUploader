@@ -5,6 +5,12 @@ Right now everything included will work as-is for the Steam API demo game "Space
 
 Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would work without [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET).
 
+### Downloads
+
+Build 6
+[Windows](https://dl.dropboxusercontent.com/u/253784/SteamWorkshopUploader.zip
+[Mac](https://dl.dropboxusercontent.com/u/253784/SteamWorkshopUploader_mac.zip)
+
 ### Setup
 
 Edit "steam_appid.txt" to match your game's app id.
