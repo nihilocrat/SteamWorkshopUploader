@@ -7,7 +7,7 @@ Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would w
 
 ### Downloads
 
-####Build 6
+#### Build 6
 
 [Windows](https://dl.dropboxusercontent.com/u/253784/SteamWorkshopUploader.zip)
 
