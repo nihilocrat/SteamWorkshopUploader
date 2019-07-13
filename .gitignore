@@ -1,0 +1,15 @@
+syntax: glob
+*.csproj
+*.pidb
+*.sln
+*.suo
+*.userprefs
+*.orig
+*.orig.meta
+Temp/
+Library/
+Assets/ModPacks/
+Builds/
+Save/
+Mod/
+Documentation/

@@ -55,14 +55,14 @@ public static class AutoBuilder {
 		return scenes;
 	}
 
-	public const string directoryName = "skyrogue/";
+	public const string directoryName = "SteamWorkshopUploader/";
     public static string basePath = Application.dataPath + "/../Builds/";
 
     static void PostBuild()
     {
-        CopyDirectory(basePath + "Common/", basePath + "Win/");
-        CopyDirectory(basePath + "Common/", basePath + "OSX-Universal/");
-        CopyDirectory(basePath + "Common/", basePath + "Linux/");
+        CopyDirectory(basePath + "Common/", basePath + "Win/" + directoryName);
+        CopyDirectory(basePath + "Common/", basePath + "OSX-Universal/" + directoryName);
+        CopyDirectory(basePath + "Common/", basePath + "Linux/" + directoryName);
     }
 
     static void CopyToSteam(string buildPath, string steamPath)
@@ -131,8 +131,8 @@ public static class AutoBuilder {
 	[MenuItem("File/AutoBuilder/Mac OSX/Universal")]
 	static void PerformOSXUniversalBuild ()
 	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneOSXUniversal);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/OSX-Universal/" + GetProjectName() + ".app", BuildTarget.StandaloneOSXUniversal,BuildOptions.None);
+		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneOSX);
+		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/OSX-Universal/" + GetProjectName() + ".app", BuildTarget.StandaloneOSX,BuildOptions.None);
 	}
 
 	[MenuItem("File/AutoBuilder/Linux/Universal")]
@@ -153,17 +153,5 @@ public static class AutoBuilder {
 	{
 		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
 		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Android",BuildTarget.Android,BuildOptions.None);
-	}
-	[MenuItem("File/AutoBuilder/Web/Standard")]
-	static void PerformWebBuild ()
-	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.WebPlayer);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Web",BuildTarget.WebPlayer,BuildOptions.None);
-	}
-	[MenuItem("File/AutoBuilder/Web/Streamed")]
-	static void PerformWebStreamedBuild ()
-	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.WebPlayerStreamed);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Web-Streamed",BuildTarget.WebPlayerStreamed,BuildOptions.None);
 	}
 }
