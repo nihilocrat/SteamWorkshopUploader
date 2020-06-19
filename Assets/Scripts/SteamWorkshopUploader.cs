@@ -363,6 +363,33 @@ public class SteamWorkshopUploader : MonoBehaviour
             case EResult.k_EResultNotLoggedOn:
                 statusText.text = "Error: You're not logged into Steam!";
                 break;
+            case EResult.k_EResultBanned:
+                statusText.text = "You don't have permission to upload content to this hub because they have an active VAC or Game ban.";
+                break;
+            case EResult.k_EResultServiceUnavailable:
+                statusText.text = "The workshop server hosting the content is having issues - please retry.";
+                break;
+            case EResult.k_EResultInvalidParam:
+                statusText.text = "One of the submission fields contains something not being accepted by that field.";
+                break;
+            case EResult.k_EResultAccessDenied:
+                statusText.text = "There was a problem trying to save the title and description. Access was denied.";
+                break;
+            case EResult.k_EResultLimitExceeded:
+                statusText.text = "You have exceeded your Steam Cloud quota. Remove some items and try again.";
+                break;
+            case EResult.k_EResultFileNotFound:
+                statusText.text = "The uploaded file could not be found.";
+                break;
+            case EResult.k_EResultDuplicateRequest:
+                statusText.text = "The file was already successfully uploaded. Please refresh.";
+                break;
+            case EResult.k_EResultDuplicateName:
+                statusText.text = "You already have a Steam Workshop item with that name.";
+                break;
+            case EResult.k_EResultServiceReadOnly:
+                statusText.text = "Due to a recent password or email change, you are not allowed to upload new content. Usually this restriction will expire in 5 days, but can last up to 30 days if the account has been inactive recently. ";
+                break;
         }
 
         if(callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
@@ -404,11 +431,36 @@ This has the benefit of directing the author to the workshop page so that they c
             return;
 		}
 
+        if(callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
+        {
+            statusText.text = "You need to accept the Steam Workshop legal agreement for this game before you can upload items!";
+            return;
+        }
+
+        currentHandle = UGCUpdateHandle_t.Invalid;
+        
         switch(callback.m_eResult)
         {
             case EResult.k_EResultOK:
                 statusText.text = "SUCCESS! Item submitted! :D :D :D";
-                currentHandle = UGCUpdateHandle_t.Invalid;
+                break;
+            case EResult.k_EResultFail:
+                statusText.text = "Failed, dunno why :(";
+                break;
+            case EResult.k_EResultInvalidParam:
+                statusText.text ="Either the provided app ID is invalid or doesn't match the consumer app ID of the item or, you have not enabled ISteamUGC for the provided app ID on the Steam Workshop Configuration App Admin page. The preview file is smaller than 16 bytes.";
+                break;
+            case EResult.k_EResultAccessDenied:
+                statusText.text ="ERROR: The user doesn't own a license for the provided app ID.";
+                break;
+            case EResult.k_EResultFileNotFound:
+                statusText.text = "Failed to get the workshop info for the item or failed to read the preview file.";
+                break;
+            case EResult.k_EResultLockingFailed:
+                statusText.text = "Failed to aquire UGC Lock.";
+                break;
+            case EResult.k_EResultLimitExceeded:
+                statusText.text = "The preview image is too large, it must be less than 1 Megabyte; or there is not enough space available on the users Steam Cloud.";
                 break;
         }
     }
@@ -427,9 +479,6 @@ This has the benefit of directing the author to the workshop page so that they c
             case EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges:
                 statusText.text = "Committing changes...";
                 break;
-            case EItemUpdateStatus.k_EItemUpdateStatusInvalid:
-                statusText.text = "Item invalid ... dunno why! :(";
-                break;
             case EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile:
                 statusText.text = "Uploading preview image...";
                 break;
@@ -442,6 +491,10 @@ This has the benefit of directing the author to the workshop page so that they c
             case EItemUpdateStatus.k_EItemUpdateStatusPreparingContent:
                 statusText.text = "Preparing content...";
                 break;
+            // from the docs: "The item update handle was invalid, the job might be finished, a SubmitItemUpdateResult_t call result should have been returned for it."
+            // case EItemUpdateStatus.k_EItemUpdateStatusInvalid:
+            //     statusText.text = "Item invalid ... dunno why! :(";
+            //     break;
         }
 
     }
