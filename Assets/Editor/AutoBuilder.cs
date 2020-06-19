@@ -94,25 +94,6 @@ public static class AutoBuilder {
 			File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
 		}
 	}
-    /*
-	[MenuItem("File/AutoBuilder/Windows/32-bit (DEMO - doesn't work yet!)")]
-	static void PerformWinBuildDEMO ()
-	{
-		PerformWinBuild();
-	}
-
-	[MenuItem("File/AutoBuilder/Mac OSX/Universal (DEMO - doesn't work yet!)")]
-	static void PerformMacBuildDEMO ()
-	{
-		PerformOSXUniversalBuild();
-	}
-
-	[MenuItem("File/AutoBuilder/Linux/Universal (DEMO - doesn't work yet!)")]
-	static void PerformLinuxBuildDEMO ()
-	{
-		PerformLinuxUniversalBuild();
-	}
-    */
 
 	[MenuItem("File/AutoBuilder/Windows/32-bit")]
 	static void PerformWinBuild ()
@@ -140,18 +121,5 @@ public static class AutoBuilder {
 	{
 		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneLinuxUniversal);
 		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Linux/" + directoryName, BuildTarget.StandaloneLinuxUniversal,BuildOptions.None);
-	}
-
-	[MenuItem("File/AutoBuilder/iOS")]
-	static void PerformiOSBuild ()
-	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.iOS);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/iOS",BuildTarget.iOS,BuildOptions.None);
-	}
-	[MenuItem("File/AutoBuilder/Android")]
-	static void PerformAndroidBuild ()
-	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Android",BuildTarget.Android,BuildOptions.None);
 	}
 }

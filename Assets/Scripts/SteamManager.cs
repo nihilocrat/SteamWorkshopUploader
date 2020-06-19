@@ -78,8 +78,8 @@ public class SteamManager : MonoBehaviour {
 		}
         
         // load app id from .txt
-        string appidString = Utils.LoadTextFile(Application.dataPath + "/../steam_appid.txt");
-        m_steamAppId = uint.Parse(appidString);
+        var config = Config.Load();
+		m_steamAppId = config.appId;
 
         try
         {

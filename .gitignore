@@ -1,6 +1,6 @@
-syntax: glob
 *.csproj
 *.pidb
+*.pdb
 *.sln
 *.suo
 *.userprefs
@@ -13,3 +13,5 @@ Builds/
 Save/
 Mod/
 Documentation/
+obj/
+.vscode
