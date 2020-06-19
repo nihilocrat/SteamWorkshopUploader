@@ -81,6 +81,8 @@ public class SteamManager : MonoBehaviour {
         var config = Config.Load();
 		m_steamAppId = config.appId;
 
+		Debug.Log("[Steamworks.NET] App ID is: " + config.appId.ToString());
+
         try
         {
             // If Steam is not running or the game wasn't started through Steam, SteamAPI_RestartAppIfNecessary starts the 
