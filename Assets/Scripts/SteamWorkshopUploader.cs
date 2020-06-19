@@ -300,7 +300,7 @@ public class SteamWorkshopUploader : MonoBehaviour
         if (string.IsNullOrEmpty(currentPack.publishedfileid))
         {
             SteamAPICall_t call = SteamUGC.CreateItem(new AppId_t(SteamManager.m_steamAppId), Steamworks.EWorkshopFileType.k_EWorkshopFileTypeCommunity);
-            m_itemCreated.Set(call);
+            m_itemCreated.Set(call, OnItemCreated);
 
             statusText.text = "Creating new item...";
         }
@@ -339,7 +339,7 @@ public class SteamWorkshopUploader : MonoBehaviour
     private void SubmitModPack(UGCUpdateHandle_t handle, WorkshopModPack pack)
     {
         SteamAPICall_t call = SteamUGC.SubmitItemUpdate(handle, pack.changenote);
-        m_itemSubmitted.Set(call);
+        m_itemSubmitted.Set(call, OnItemSubmitted);
         //In the same way as Creating a Workshop Item, confirm the user has accepted the legal agreement. This is necessary in case where the user didn't initially create the item but is editing an existing item.
     }
 
