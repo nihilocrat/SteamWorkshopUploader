@@ -17,15 +17,16 @@ Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would w
 
 Make sure you're logged into the Steam client, otherwise nothing will work.
 
-Edit "config.json" and set "appId" to match your game's app id.
+Edit "steam_appid.txt" to match your game's app id.
 
-Edit the other settings to match your workshop settings. For example, if you use predefined tags, be sure to define them and set "validateTags" to true.
+Edit "config.json" to match your workshop settings. For example, if you use predefined tags, be sure to define them and set "validateTags" to true.
 
 ### Distributing to modders
 
 Be sure to include these files in builds you distribute:
 
 - config.json
+- steam_appid.txt
 - steam_api.dll (Steamworks.NET should do this automatically)
 - UnityPlayer.dll
 - WorkshopContent/
