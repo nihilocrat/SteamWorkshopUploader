@@ -9,7 +9,7 @@ using TinyJSON;
 
 public class SteamWorkshopUploader : MonoBehaviour
 {
-    public const int version = 7;
+    public const int version = 8;
 
     public Text versionText;
     public Text statusText;
@@ -290,7 +290,14 @@ public class SteamWorkshopUploader : MonoBehaviour
             
             if (ValidateModPack(currentPack))
             {
-                UploadModPack(currentPack);
+                if(string.IsNullOrEmpty(currentPack.publishedfileid))
+                {
+                    CreateWorkshopItem();
+                }
+                else
+                {
+                    UploadModPack(currentPack);
+                }
             }
         }
     }
@@ -308,6 +315,12 @@ public class SteamWorkshopUploader : MonoBehaviour
 
     private void UploadModPack(WorkshopModPack pack)
     {
+        if (string.IsNullOrEmpty(currentPack.publishedfileid))
+        {
+            statusText.text = "ERROR: publishedfileid is empty, try creating the workshop item first...";
+            return;
+        }
+
         ulong ulongId = ulong.Parse(pack.publishedfileid);
         var id = new PublishedFileId_t(ulongId);
 
