@@ -9,7 +9,7 @@ using TinyJSON;
 
 public class SteamWorkshopUploader : MonoBehaviour
 {
-    public const int version = 8;
+    public const int version = 9;
 
     public Text versionText;
     public Text statusText;
