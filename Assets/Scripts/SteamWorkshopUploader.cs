@@ -16,7 +16,9 @@ public class SteamWorkshopUploader : MonoBehaviour
     public Slider progressBar;
 
     public RectTransform packListRoot;
+    public RectTransform packListFrame;
     public GameObject packListButtonPrefab;
+    public Text fatalErrorText;
 
     [Header("ModPack Interface")]
     public RectTransform currentItemPanel;
@@ -55,11 +57,17 @@ public class SteamWorkshopUploader : MonoBehaviour
 
         if(SteamManager.m_steamAppId == 0)
         {
-            string error = "ERROR: Steam App ID isn't set! Make sure 'steam_appid.txt' is placed next to the executable file, and contains a single line with the app id.";
+            FatalError("Steam App ID isn't set! Make sure 'config.json' is placed next to the '.exe' file and contains an 'appId' entry with the correct app ID assigned.");
         }
-
-        RefreshPackList();
-        RefreshCurrentModPack();
+        else if(!SteamManager.Initialized)
+        {
+            FatalError("Steam API not initialized :(\n Make sure you have the Steam client running.");
+        }
+        else
+        {
+            RefreshPackList();
+            RefreshCurrentModPack();
+        }
     }
 
     void OnApplicationQuit()
@@ -100,6 +108,15 @@ public class SteamWorkshopUploader : MonoBehaviour
             m_itemSubmitted = CallResult<SubmitItemUpdateResult_t>.Create(OnItemSubmitted);
         }
 	}
+
+    public void FatalError(string message)
+    {
+        fatalErrorText.text = "FATAL ERROR:\n" + message;
+        fatalErrorText.gameObject.SetActive(true);
+
+        packListFrame.gameObject.SetActive(false);
+        currentItemPanel.gameObject.SetActive(false);
+    }
 
     void SetupDirectories()
     {
