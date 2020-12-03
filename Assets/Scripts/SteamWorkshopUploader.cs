@@ -260,9 +260,9 @@ public class SteamWorkshopUploader : MonoBehaviour
             string filename = basePath + packName + ".workshop.json";
 
             var pack = new WorkshopModPack();
+            pack.contentfolder = modPackName.text;
             pack.Save(filename);
 
-            pack.contentfolder = modPackName.text;
             Directory.CreateDirectory(basePath + modPackName.text);
             
             RefreshPackList();
