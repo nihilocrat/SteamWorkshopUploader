@@ -7,7 +7,7 @@ Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would w
 
 ### Downloads
 
-###Build 8
+#### Build 8
 
 [Windows](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build8/SteamWorkshopUploader_win.zip)
 
