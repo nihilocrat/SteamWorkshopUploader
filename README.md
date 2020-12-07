@@ -7,13 +7,15 @@ Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would w
 
 ### Downloads
 
-#### Build 6
+#### Build 8
 
-[Windows](https://dl.dropboxusercontent.com/u/253784/SteamWorkshopUploader.zip)
+[Windows](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build8/SteamWorkshopUploader_win.zip)
 
-[Mac](https://dl.dropboxusercontent.com/u/253784/SteamWorkshopUploader_mac.zip)
+[Mac](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build8/SteamWorkshopUploader_mac.zip)
 
 ### Setup
+
+Make sure you're logged into the Steam client, otherwise nothing will work.
 
 Edit "steam_appid.txt" to match your game's app id.
 
@@ -26,6 +28,7 @@ Be sure to include these files in builds you distribute:
 - config.json
 - steam_appid.txt
 - steam_api.dll (Steamworks.NET should do this automatically)
+- UnityPlayer.dll
 - WorkshopContent/
 - Optionally: an example mod or two in WorkshopContent/ so modders can understand the format of .workshop.json files.
 

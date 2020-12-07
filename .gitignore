@@ -1,0 +1,17 @@
+*.csproj
+*.pidb
+*.pdb
+*.sln
+*.suo
+*.userprefs
+*.orig
+*.orig.meta
+Temp/
+Library/
+Assets/ModPacks/
+Builds/
+Save/
+Mod/
+Documentation/
+obj/
+.vscode

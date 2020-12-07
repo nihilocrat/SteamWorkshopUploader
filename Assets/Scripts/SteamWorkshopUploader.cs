@@ -9,14 +9,16 @@ using TinyJSON;
 
 public class SteamWorkshopUploader : MonoBehaviour
 {
-    public const int version = 6;
+    public const int version = 9;
 
     public Text versionText;
     public Text statusText;
     public Slider progressBar;
 
     public RectTransform packListRoot;
+    public RectTransform packListFrame;
     public GameObject packListButtonPrefab;
+    public Text fatalErrorText;
 
     [Header("ModPack Interface")]
     public RectTransform currentItemPanel;
@@ -55,11 +57,17 @@ public class SteamWorkshopUploader : MonoBehaviour
 
         if(SteamManager.m_steamAppId == 0)
         {
-            string error = "ERROR: Steam App ID isn't set! Make sure 'steam_appid.txt' is placed next to the executable file, and contains a single line with the app id.";
+            FatalError("Steam App ID isn't set! Make sure 'config.json' is placed next to the '.exe' file and contains an 'appId' entry with the correct app ID assigned.");
         }
-
-        RefreshPackList();
-        RefreshCurrentModPack();
+        else if(!SteamManager.Initialized)
+        {
+            FatalError("Steam API not initialized :(\n Make sure you have the Steam client running.");
+        }
+        else
+        {
+            RefreshPackList();
+            RefreshCurrentModPack();
+        }
     }
 
     void OnApplicationQuit()
@@ -100,6 +108,15 @@ public class SteamWorkshopUploader : MonoBehaviour
             m_itemSubmitted = CallResult<SubmitItemUpdateResult_t>.Create(OnItemSubmitted);
         }
 	}
+
+    public void FatalError(string message)
+    {
+        fatalErrorText.text = "FATAL ERROR:\n" + message;
+        fatalErrorText.gameObject.SetActive(true);
+
+        packListFrame.gameObject.SetActive(false);
+        currentItemPanel.gameObject.SetActive(false);
+    }
 
     void SetupDirectories()
     {
@@ -260,9 +277,9 @@ public class SteamWorkshopUploader : MonoBehaviour
             string filename = basePath + packName + ".workshop.json";
 
             var pack = new WorkshopModPack();
+            pack.contentfolder = modPackName.text;
             pack.Save(filename);
 
-            pack.contentfolder = modPackName.text;
             Directory.CreateDirectory(basePath + modPackName.text);
             
             RefreshPackList();
@@ -290,7 +307,14 @@ public class SteamWorkshopUploader : MonoBehaviour
             
             if (ValidateModPack(currentPack))
             {
-                UploadModPack(currentPack);
+                if(string.IsNullOrEmpty(currentPack.publishedfileid))
+                {
+                    CreateWorkshopItem();
+                }
+                else
+                {
+                    UploadModPack(currentPack);
+                }
             }
         }
     }
@@ -300,7 +324,7 @@ public class SteamWorkshopUploader : MonoBehaviour
         if (string.IsNullOrEmpty(currentPack.publishedfileid))
         {
             SteamAPICall_t call = SteamUGC.CreateItem(new AppId_t(SteamManager.m_steamAppId), Steamworks.EWorkshopFileType.k_EWorkshopFileTypeCommunity);
-            m_itemCreated.Set(call);
+            m_itemCreated.Set(call, OnItemCreated);
 
             statusText.text = "Creating new item...";
         }
@@ -308,6 +332,12 @@ public class SteamWorkshopUploader : MonoBehaviour
 
     private void UploadModPack(WorkshopModPack pack)
     {
+        if (string.IsNullOrEmpty(currentPack.publishedfileid))
+        {
+            statusText.text = "ERROR: publishedfileid is empty, try creating the workshop item first...";
+            return;
+        }
+
         ulong ulongId = ulong.Parse(pack.publishedfileid);
         var id = new PublishedFileId_t(ulongId);
 
@@ -339,7 +369,7 @@ public class SteamWorkshopUploader : MonoBehaviour
     private void SubmitModPack(UGCUpdateHandle_t handle, WorkshopModPack pack)
     {
         SteamAPICall_t call = SteamUGC.SubmitItemUpdate(handle, pack.changenote);
-        m_itemSubmitted.Set(call);
+        m_itemSubmitted.Set(call, OnItemSubmitted);
         //In the same way as Creating a Workshop Item, confirm the user has accepted the legal agreement. This is necessary in case where the user didn't initially create the item but is editing an existing item.
     }
 
@@ -362,6 +392,33 @@ public class SteamWorkshopUploader : MonoBehaviour
                 break;
             case EResult.k_EResultNotLoggedOn:
                 statusText.text = "Error: You're not logged into Steam!";
+                break;
+            case EResult.k_EResultBanned:
+                statusText.text = "You don't have permission to upload content to this hub because they have an active VAC or Game ban.";
+                break;
+            case EResult.k_EResultServiceUnavailable:
+                statusText.text = "The workshop server hosting the content is having issues - please retry.";
+                break;
+            case EResult.k_EResultInvalidParam:
+                statusText.text = "One of the submission fields contains something not being accepted by that field.";
+                break;
+            case EResult.k_EResultAccessDenied:
+                statusText.text = "There was a problem trying to save the title and description. Access was denied.";
+                break;
+            case EResult.k_EResultLimitExceeded:
+                statusText.text = "You have exceeded your Steam Cloud quota. Remove some items and try again.";
+                break;
+            case EResult.k_EResultFileNotFound:
+                statusText.text = "The uploaded file could not be found.";
+                break;
+            case EResult.k_EResultDuplicateRequest:
+                statusText.text = "The file was already successfully uploaded. Please refresh.";
+                break;
+            case EResult.k_EResultDuplicateName:
+                statusText.text = "You already have a Steam Workshop item with that name.";
+                break;
+            case EResult.k_EResultServiceReadOnly:
+                statusText.text = "Due to a recent password or email change, you are not allowed to upload new content. Usually this restriction will expire in 5 days, but can last up to 30 days if the account has been inactive recently. ";
                 break;
         }
 
@@ -404,11 +461,36 @@ This has the benefit of directing the author to the workshop page so that they c
             return;
 		}
 
+        if(callback.m_bUserNeedsToAcceptWorkshopLegalAgreement)
+        {
+            statusText.text = "You need to accept the Steam Workshop legal agreement for this game before you can upload items!";
+            return;
+        }
+
+        currentHandle = UGCUpdateHandle_t.Invalid;
+        
         switch(callback.m_eResult)
         {
             case EResult.k_EResultOK:
                 statusText.text = "SUCCESS! Item submitted! :D :D :D";
-                currentHandle = UGCUpdateHandle_t.Invalid;
+                break;
+            case EResult.k_EResultFail:
+                statusText.text = "Failed, dunno why :(";
+                break;
+            case EResult.k_EResultInvalidParam:
+                statusText.text ="Either the provided app ID is invalid or doesn't match the consumer app ID of the item or, you have not enabled ISteamUGC for the provided app ID on the Steam Workshop Configuration App Admin page. The preview file is smaller than 16 bytes.";
+                break;
+            case EResult.k_EResultAccessDenied:
+                statusText.text ="ERROR: The user doesn't own a license for the provided app ID.";
+                break;
+            case EResult.k_EResultFileNotFound:
+                statusText.text = "Failed to get the workshop info for the item or failed to read the preview file.";
+                break;
+            case EResult.k_EResultLockingFailed:
+                statusText.text = "Failed to aquire UGC Lock.";
+                break;
+            case EResult.k_EResultLimitExceeded:
+                statusText.text = "The preview image is too large, it must be less than 1 Megabyte; or there is not enough space available on the users Steam Cloud.";
                 break;
         }
     }
@@ -427,9 +509,6 @@ This has the benefit of directing the author to the workshop page so that they c
             case EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges:
                 statusText.text = "Committing changes...";
                 break;
-            case EItemUpdateStatus.k_EItemUpdateStatusInvalid:
-                statusText.text = "Item invalid ... dunno why! :(";
-                break;
             case EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile:
                 statusText.text = "Uploading preview image...";
                 break;
@@ -442,6 +521,10 @@ This has the benefit of directing the author to the workshop page so that they c
             case EItemUpdateStatus.k_EItemUpdateStatusPreparingContent:
                 statusText.text = "Preparing content...";
                 break;
+            // from the docs: "The item update handle was invalid, the job might be finished, a SubmitItemUpdateResult_t call result should have been returned for it."
+            // case EItemUpdateStatus.k_EItemUpdateStatusInvalid:
+            //     statusText.text = "Item invalid ... dunno why! :(";
+            //     break;
         }
 
     }
@@ -479,25 +562,6 @@ This has the benefit of directing the author to the workshop page so that they c
             progressBar.value = 0f;
         }
 	}
-}
-
-[System.Serializable]
-public class Config
-{
-    public bool validateTags = false;
-    public List<string> validTags = new List<string>();
-
-    [TinyJSON.Skip]
-    public const string filename = "config.json";
-
-    public static Config Load()
-    {
-        Config obj = null;
-        string jsonString = Utils.LoadTextFile(Application.dataPath + "/../" + filename);
-        JSON.MakeInto<Config>(JSON.Load(jsonString), out obj);
-
-        return obj;
-    }
 }
 
 [System.Serializable]
