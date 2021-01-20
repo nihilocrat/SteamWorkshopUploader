@@ -78,10 +78,11 @@ public class SteamManager : MonoBehaviour {
 		}
         
         // load app id from .txt
-        var config = Config.Load();
-		m_steamAppId = config.appId;
+		// don't put this in config.json because Steam expects steam_appid.txt to exist (see the comment below about API init)
+		string appidString = Utils.LoadTextFile(Application.dataPath + "/../steam_appid.txt");
+        m_steamAppId = uint.Parse(appidString);
 
-		Debug.Log("[Steamworks.NET] App ID is: " + config.appId.ToString());
+		Debug.Log("[Steamworks.NET] App ID is: " + m_steamAppId.ToString());
 
         try
         {
