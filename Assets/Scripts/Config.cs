@@ -5,7 +5,6 @@ using TinyJSON;
 [System.Serializable]
 public class Config
 {
-    public uint appId = 381020;
     public bool validateTags = false;
     public List<string> validTags = new List<string>();
 
