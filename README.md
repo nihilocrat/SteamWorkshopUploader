@@ -7,11 +7,11 @@ Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would w
 
 ### Downloads
 
-#### Build 8
+#### Build 9
 
-[Windows](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build8/SteamWorkshopUploader_win.zip)
+[Windows](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build9/SteamWorkshopUploader_9_win.zip)
 
-[Mac](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build8/SteamWorkshopUploader_mac.zip)
+[Mac](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build9/SteamWorkshopUploader_9_mac.zip)
 
 ### Setup
 
