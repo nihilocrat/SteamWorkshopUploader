@@ -55,14 +55,24 @@ public static class AutoBuilder {
 		return scenes;
 	}
 
-	public const string directoryName = "SteamWorkshopUploader/";
-    public static string basePath = Application.dataPath + "/../Builds/";
+	public const string outputDirectoryName = "SteamWorkshopUploader";
+	public static readonly string basePath = Application.dataPath + "/../";
+    public static readonly string buildPath = basePath + "Builds/";
+	public static readonly string extrasDirectoryName = basePath + "BuildExtras/";
 
-    static void PostBuild()
+	private static void PreBuild()
+	{
+
+	}
+
+    private static void PostBuild()
     {
-        CopyDirectory(basePath + "Common/", basePath + "Win/" + directoryName);
-        CopyDirectory(basePath + "Common/", basePath + "OSX-Universal/" + directoryName);
-        CopyDirectory(basePath + "Common/", basePath + "Linux/" + directoryName);
+		CopyFileToBuilds(basePath, "config.json");
+		CopyFileToBuilds(basePath, "steam_appid.txt");
+
+        CopyDirectory(extrasDirectoryName, buildPath + "Win/" + outputDirectoryName + "/");
+        CopyDirectory(extrasDirectoryName, buildPath + "OSX-Universal/" + outputDirectoryName + ".app/");
+        CopyDirectory(extrasDirectoryName, buildPath + "Linux/" + outputDirectoryName + "/");
     }
 
     static void CopyToSteam(string buildPath, string steamPath)
@@ -76,8 +86,17 @@ public static class AutoBuilder {
 		PerformWinBuild();
 		PerformOSXUniversalBuild();
 		PerformLinuxUniversalBuild();
-
+		
         PostBuild();
+	}
+
+	public static void CopyFileToBuilds(string directory, string fileName)
+	{
+		string sourcePath = directory + "/" + fileName;
+
+		File.Copy(sourcePath, buildPath + "Win/" + outputDirectoryName + "/" + fileName, true);
+		File.Copy(sourcePath, buildPath + "OSX-Universal/" + outputDirectoryName + ".app/" + fileName, true);
+		File.Copy(sourcePath, buildPath + "Linux/" + outputDirectoryName + "/" + fileName, true);
 	}
 
 	public static void CopyDirectory(string SourcePath, string DestinationPath)
@@ -94,32 +113,50 @@ public static class AutoBuilder {
 			File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
 		}
 	}
+	
+    private static void BuildWithLogging(string identifier, System.Action buildFunction)
+    {
+        Debug.LogFormat("---=== BUILD BEGIN! {0} @ {1}", identifier, System.DateTime.Now.ToShortTimeString());
 
-	[MenuItem("File/AutoBuilder/Windows/32-bit")]
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
+        PreBuild();
+
+        buildFunction();
+
+        //PostBuild();
+
+        stopwatch.Stop();
+        float seconds = Mathf.FloorToInt((float)stopwatch.Elapsed.TotalSeconds);
+        float mins = (float)stopwatch.Elapsed.TotalMinutes;
+        Debug.LogFormat("---=== BUILD COMPLETE! {0} (elapsed: {1:0.00}m) @ {2}", identifier, mins, System.DateTime.Now.ToShortTimeString());
+    }
+
+	//[MenuItem("File/AutoBuilder/Windows")]
 	static void PerformWinBuild ()
 	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Win/" + directoryName + GetProjectName() + ".exe",BuildTarget.StandaloneWindows,BuildOptions.None);
-	}
-	
-	[MenuItem("File/AutoBuilder/Windows/64-bit")]
-	static void PerformWin64Build ()
-	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Win64/" + directoryName + GetProjectName() + ".exe",BuildTarget.StandaloneWindows64,BuildOptions.None);
+		BuildWithLogging("Windows", () => {
+			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows);
+			BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Win/" + outputDirectoryName + "/" + GetProjectName() + ".exe",BuildTarget.StandaloneWindows,BuildOptions.None);
+		});
 	}
 
-	[MenuItem("File/AutoBuilder/Mac OSX/Universal")]
+	//[MenuItem("File/AutoBuilder/Mac OSX")]
 	static void PerformOSXUniversalBuild ()
 	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneOSX);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/OSX-Universal/" + GetProjectName() + ".app", BuildTarget.StandaloneOSX,BuildOptions.None);
+		BuildWithLogging("Mac OSX", () => {
+			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneOSX);
+			BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/OSX-Universal/" + GetProjectName() + ".app", BuildTarget.StandaloneOSX,BuildOptions.None);
+		});
 	}
 
-	[MenuItem("File/AutoBuilder/Linux/Universal")]
+	//[MenuItem("File/AutoBuilder/Linux")]
 	static void PerformLinuxUniversalBuild ()
 	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneLinuxUniversal);
-		BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Linux/" + directoryName, BuildTarget.StandaloneLinuxUniversal,BuildOptions.None);
+		BuildWithLogging("Linux", () => {
+			EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneLinuxUniversal);
+			BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/Linux/" + outputDirectoryName + "/", BuildTarget.StandaloneLinuxUniversal,BuildOptions.None);
+		});
 	}
 }
