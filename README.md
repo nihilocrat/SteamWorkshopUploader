@@ -5,15 +5,15 @@ Right now everything included will work as-is for the Steam API demo game "Space
 
 Thanks goes to [rlabrecque](https://github.com/rlabrecque), none of this would work without [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET).
 
-### Downloads
+## Downloads
 
-#### Build 10
+### Build 10
 
 [Windows](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build10/SteamWorkshopUploader_10_win.zip)
 
 [Mac](https://github.com/nihilocrat/SteamWorkshopUploader/releases/download/Build10/SteamWorkshopUploader_10_mac.zip)
 
-### Setup
+## Setup
 
 Make sure you're logged into the Steam client, otherwise nothing will work.
 
@@ -21,7 +21,7 @@ Edit "steam_appid.txt" to match your game's app id.
 
 Edit "config.json" to match your workshop settings. For example, if you use predefined tags, be sure to define them and set "validateTags" to true.
 
-### Distributing to modders
+## Distributing to modders
 
 Be sure to include these files in builds you distribute:
 
@@ -32,14 +32,14 @@ Be sure to include these files in builds you distribute:
 - WorkshopContent/
 - Optionally: an example mod or two in WorkshopContent/ so modders can understand the format of .workshop.json files.
 
-### KNOWN ISSUES
+## KNOWN ISSUES
 
-# Invalid Item
+### Invalid Item
 Sometimes it seems that users are unable to upload things and get an "invalid item" error. I have discovered a single possible cause which the uploader should handle and complain about in the status bar: if "steam_appid.txt" doesn't exist, or has an invalid id (such as 0), or for some reason the uploader is unable to load the file, and thus has no app ID to use.
 
 However, it's possible it could happen in other situations. Sometimes users are able to resolve it by doing seemingly random things like choosing a different preview image or making other seemingly random changes to the content itself. Usually, if another user uploads the same content as-is there are no problems, so I'm unable to verify if the issue is with SteamWorkshopUploader or Steam itself. I've been talking to Valve about this but have been unable to determine a cause or potential fixes.
 
 If you use this uploader for your own game and find your players run into this same issue, but are able to figure out some solution or workaround, PLEASE get in contact or create a pull request, it would be greatly appreciated.
 
-# File limit error
+### File limit error
 Some users have discovered that they run into a file limit error. The solution is to delete your Steam saves. For some reason, Steam counts your saves toward your icon file limit, and deleting your saves seems to solve the issue of uploading your mods with an icon. Thanks to Twingamerdudes and the Madness: Project Nexus team for discovering this.
