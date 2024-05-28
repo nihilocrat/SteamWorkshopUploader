@@ -34,8 +34,12 @@ Be sure to include these files in builds you distribute:
 
 ### KNOWN ISSUES
 
+# Invalid Item
 Sometimes it seems that users are unable to upload things and get an "invalid item" error. I have discovered a single possible cause which the uploader should handle and complain about in the status bar: if "steam_appid.txt" doesn't exist, or has an invalid id (such as 0), or for some reason the uploader is unable to load the file, and thus has no app ID to use.
 
 However, it's possible it could happen in other situations. Sometimes users are able to resolve it by doing seemingly random things like choosing a different preview image or making other seemingly random changes to the content itself. Usually, if another user uploads the same content as-is there are no problems, so I'm unable to verify if the issue is with SteamWorkshopUploader or Steam itself. I've been talking to Valve about this but have been unable to determine a cause or potential fixes.
 
 If you use this uploader for your own game and find your players run into this same issue, but are able to figure out some solution or workaround, PLEASE get in contact or create a pull request, it would be greatly appreciated.
+
+# File limit error
+Some users have discovered that they run into a file limit error. The solution is to delete your Steam saves. For some reason, Steam counts your saves toward your icon file limit, and deleting your saves seems to solve the issue of uploading your mods with an icon. Thanks to Twingamerdudes and the Madness: Project Nexus team for discovering this.
